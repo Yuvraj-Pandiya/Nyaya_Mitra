@@ -2,7 +2,7 @@
 import { useTranslation } from 'react-i18next';
 import { Scale, Shield, BookOpen, Code } from 'lucide-react';
 
-const techStack = ['Next.js 14 (App Router)', 'TypeScript', 'i18next (Hindi + English)', 'jsPDF (document generation)', 'Node.js + Express (backend)', 'MongoDB Atlas', 'Google Gemini Flash (AI)', '@react-google-maps/api'];
+const techStack = ['Next.js 14 (App Router)', 'TypeScript', 'i18next (Hindi + English)', 'jsPDF (document generation)', 'Java + Spring Boot (backend)', 'MongoDB Atlas', 'Google Gemini Flash (AI)', '@react-google-maps/api'];
 const sources = ['IndiaCode (indiacode.nic.in)', 'NALSA (nalsa.gov.in)', 'Consumer Helpline (consumerhelpline.gov.in)', 'RTI Online (rtionline.gov.in)', 'Ministry of Law and Justice'];
 
 export default function AboutPage() {

@@ -1,0 +1,16 @@
+package com.nyayamitra.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class ChecklistItemDto {
+    private String id;
+    private BilingualTextDto item;
+    private boolean required;
+}

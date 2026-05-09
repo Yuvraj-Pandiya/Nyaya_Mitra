@@ -33,7 +33,7 @@ export interface Situation {
   laws: LawSection[];
   checklist: ChecklistItem[];
   steps: ProcedureStep[];
-  templateType: 'rti' | 'complaint' | 'fir' | 'labor';
+  templateType: 'rti' | 'complaint' | 'fir' | 'labor' | 'consumer';
 }
 export interface Lawyer {
   id: string;
@@ -65,5 +65,12 @@ export interface DocumentFormData {
   respondentAddress?: string;
   authority?: string;
   infoRequested?: string;
+  // FIR specific
+  incidentTime?: string;
+  incidentLocation?: string;
+  accusedNames?: string;
+  witnessNames?: string;
+  evidenceList?: string;
+  complainantId?: string;
 }
 export type Language = 'en' | 'hi';

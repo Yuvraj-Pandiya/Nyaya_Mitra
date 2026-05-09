@@ -343,7 +343,7 @@ const situations: Situation[] = [
         }
       }
     ],
-    "templateType": "complaint"
+    "templateType": "consumer"
   },
   {
     "id": "workplace-harassment",

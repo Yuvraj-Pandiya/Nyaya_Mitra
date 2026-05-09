@@ -1,0 +1,268 @@
+[
+  {
+    "name": "Adv. Priya Nair",
+    "specializations": [
+      "consumer-complaint",
+      "domestic-violence"
+    ],
+    "state": "Maharashtra",
+    "city": "Mumbai",
+    "phone": "+91-9876543210",
+    "email": "priya.nair@legalaid.org",
+    "organization": "Mumbai Legal Aid Society",
+    "languages": [
+      "English",
+      "Hindi",
+      "Marathi"
+    ],
+    "proBono": true,
+    "experience": 12,
+    "barCouncilId": "MH/12345/2012",
+    "availableFor": [
+      "consumer-complaint",
+      "domestic-violence",
+      "workplace-harassment"
+    ],
+    "rating": 5,
+    "locationLink": "https://maps.app.goo.gl/MumbaiLegalAid"
+  },
+  {
+    "name": "Adv. Rajesh Kumar",
+    "specializations": [
+      "landlord-dispute",
+      "property-dispute"
+    ],
+    "state": "Delhi",
+    "city": "New Delhi",
+    "phone": "+91-9765432109",
+    "email": "rajesh.kumar@dlsa.in",
+    "organization": "Delhi Legal Services Authority",
+    "languages": [
+      "Hindi",
+      "English"
+    ],
+    "proBono": true,
+    "experience": 18,
+    "barCouncilId": "DL/67890/2006",
+    "availableFor": [
+      "landlord-dispute",
+      "property-dispute",
+      "fir-filing"
+    ],
+    "rating": 5,
+    "locationLink": "https://maps.app.goo.gl/DelhiLegalAid"
+  },
+  {
+    "name": "Adv. Sunita Patel",
+    "specializations": [
+      "workplace-harassment",
+      "domestic-violence"
+    ],
+    "state": "Gujarat",
+    "city": "Ahmedabad",
+    "phone": "+91-9654321098",
+    "email": "sunita.patel@nalsa.gov.in",
+    "organization": "Gujarat SLSA",
+    "languages": [
+      "Gujarati",
+      "Hindi",
+      "English"
+    ],
+    "proBono": true,
+    "experience": 8,
+    "barCouncilId": "GJ/11223/2016",
+    "availableFor": [
+      "workplace-harassment",
+      "domestic-violence"
+    ],
+    "rating": 4,
+    "locationLink": "https://maps.app.goo.gl/GujaratLegalAid"
+  },
+  {
+    "name": "Adv. Mohammed Rafi",
+    "specializations": [
+      "fir-filing",
+      "rti-application"
+    ],
+    "state": "Karnataka",
+    "city": "Bangalore",
+    "phone": "+91-9543210987",
+    "email": "m.rafi@kalsa.kar.gov.in",
+    "organization": "Karnataka SLSA",
+    "languages": [
+      "Kannada",
+      "Hindi",
+      "English",
+      "Urdu"
+    ],
+    "proBono": true,
+    "experience": 15,
+    "barCouncilId": "KA/44556/2009",
+    "availableFor": [
+      "fir-filing",
+      "rti-application",
+      "property-dispute"
+    ],
+    "rating": 5,
+    "locationLink": "https://maps.app.goo.gl/BangaloreLegalAid"
+  },
+  {
+    "name": "Adv. Kavitha Iyer",
+    "specializations": [
+      "consumer-complaint",
+      "rti-application"
+    ],
+    "state": "Tamil Nadu",
+    "city": "Chennai",
+    "phone": "+91-9432109876",
+    "email": "kavitha.iyer@tnlsa.in",
+    "organization": "Tamil Nadu SLSA",
+    "languages": [
+      "Tamil",
+      "English",
+      "Hindi"
+    ],
+    "proBono": true,
+    "experience": 10,
+    "barCouncilId": "TN/78901/2014",
+    "availableFor": [
+      "consumer-complaint",
+      "rti-application"
+    ],
+    "rating": 4,
+    "locationLink": "https://maps.app.goo.gl/ChennaiLegalAid"
+  },
+  {
+    "name": "Adv. Arjun Singh",
+    "specializations": [
+      "property-dispute",
+      "fir-filing"
+    ],
+    "state": "Uttar Pradesh",
+    "city": "Lucknow",
+    "phone": "+91-9321098765",
+    "email": "arjun.singh@upslsa.gov.in",
+    "organization": "UP SLSA",
+    "languages": [
+      "Hindi",
+      "English"
+    ],
+    "proBono": true,
+    "experience": 20,
+    "barCouncilId": "UP/23456/2004",
+    "availableFor": [
+      "property-dispute",
+      "fir-filing",
+      "landlord-dispute"
+    ],
+    "rating": 5,
+    "locationLink": "https://maps.app.goo.gl/LucknowLegalAid"
+  },
+  {
+    "name": "Adv. Meena Devi",
+    "specializations": [
+      "domestic-violence",
+      "workplace-harassment"
+    ],
+    "state": "Rajasthan",
+    "city": "Jaipur",
+    "phone": "+91-9210987654",
+    "email": "meena.devi@rslsa.in",
+    "organization": "Rajasthan SLSA",
+    "languages": [
+      "Rajasthani",
+      "Hindi",
+      "English"
+    ],
+    "proBono": true,
+    "experience": 7,
+    "barCouncilId": "RJ/56789/2017",
+    "availableFor": [
+      "domestic-violence",
+      "workplace-harassment"
+    ],
+    "rating": 4,
+    "locationLink": "https://maps.app.goo.gl/JaipurLegalAid"
+  },
+  {
+    "name": "Adv. Anand Sharma",
+    "specializations": [
+      "landlord-dispute",
+      "consumer-complaint"
+    ],
+    "state": "West Bengal",
+    "city": "Kolkata",
+    "phone": "+91-9109876543",
+    "email": "anand.sharma@wbslsa.wb.gov.in",
+    "organization": "West Bengal SLSA",
+    "languages": [
+      "Bengali",
+      "Hindi",
+      "English"
+    ],
+    "proBono": true,
+    "experience": 14,
+    "barCouncilId": "WB/34567/2010",
+    "availableFor": [
+      "landlord-dispute",
+      "consumer-complaint",
+      "property-dispute"
+    ],
+    "rating": 4,
+    "locationLink": "https://maps.app.goo.gl/KolkataLegalAid"
+  },
+  {
+    "name": "Adv. Fatima Begum",
+    "specializations": [
+      "domestic-violence",
+      "fir-filing"
+    ],
+    "state": "Telangana",
+    "city": "Hyderabad",
+    "phone": "+91-9098765432",
+    "email": "fatima.begum@tslsa.in",
+    "organization": "Telangana SLSA",
+    "languages": [
+      "Telugu",
+      "Urdu",
+      "Hindi",
+      "English"
+    ],
+    "proBono": true,
+    "experience": 9,
+    "barCouncilId": "TS/45678/2015",
+    "availableFor": [
+      "domestic-violence",
+      "fir-filing"
+    ],
+    "rating": 5,
+    "locationLink": "https://maps.app.goo.gl/HyderabadLegalAid"
+  },
+  {
+    "name": "Adv. Vikram Rao",
+    "specializations": [
+      "rti-application",
+      "property-dispute"
+    ],
+    "state": "Maharashtra",
+    "city": "Pune",
+    "phone": "+91-9987654321",
+    "email": "vikram.rao@mslsa.mah.gov.in",
+    "organization": "Maharashtra SLSA - Pune",
+    "languages": [
+      "Marathi",
+      "Hindi",
+      "English"
+    ],
+    "proBono": true,
+    "experience": 11,
+    "barCouncilId": "MH/67890/2013",
+    "availableFor": [
+      "rti-application",
+      "property-dispute",
+      "landlord-dispute"
+    ],
+    "rating": 4,
+    "locationLink": "https://maps.app.goo.gl/PuneLegalAid"
+  }
+]

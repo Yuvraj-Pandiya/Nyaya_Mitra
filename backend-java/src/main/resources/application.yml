@@ -1,0 +1,63 @@
+server:
+  port: 5000
+
+spring:
+  application:
+    name: nyayamitra-backend
+
+  datasource:
+    url: ${DB_URL:jdbc:h2:mem:nyayamitra;DB_CLOSE_DELAY=-1}
+    username: ${DB_USERNAME:sa}
+    password: ${DB_PASSWORD:}
+    driver-class-name: ${DB_DRIVER:org.h2.Driver}
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+    open-in-view: false
+
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      write-dates-as-timestamps: false
+
+# ─── JWT ────────────────────────────────────────────────────────────────────
+jwt:
+  secret: ${JWT_SECRET:nyayamitra_super_secret_key_change_in_production_2024}
+  expiration-ms: 86400000  # 24 hours
+
+# ─── Gemini AI ───────────────────────────────────────────────────────────────
+gemini:
+  api-key: ${GEMINI_API_KEY:AIzaSyCzhOo94qtyTNlmOVCOhoukkv6M4WhzBFc}
+  model: gemini-1.5-flash
+  base-url: https://generativelanguage.googleapis.com/v1beta/models
+
+# ─── CORS ────────────────────────────────────────────────────────────────────
+cors:
+  allowed-origins: ${FRONTEND_URL:http://localhost:3000}
+
+# ─── Swagger ─────────────────────────────────────────────────────────────────
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+  info:
+    title: NyayaMitra API
+    description: AI-Enhanced Legal Aid Platform for First-Generation Litigants
+    version: 1.0.0
+
+logging:
+  level:
+    com.nyayamitra: DEBUG
+    org.springframework.security: WARN

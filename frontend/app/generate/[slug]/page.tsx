@@ -5,8 +5,8 @@ import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight, Download, Copy, Check, Scale } from 'lucide-react';
 import DocumentForm from '../../../components/generate/DocumentForm';
-import DocumentPreview, { makeComplaintText, makeRTIText } from '../../../components/generate/DocumentPreview';
-import { generateComplaintPDF, generateRTIPDF, generateFIRDraftPDF } from '../../../lib/pdfGenerator';
+import DocumentPreview, { makeComplaintText, makeRTIText, makeFIRText, makeConsumerText } from '../../../components/generate/DocumentPreview';
+import { generateComplaintPDF, generateRTIPDF, generateFIRDraftPDF, generateConsumerComplaintPDF } from '../../../lib/pdfGenerator';
 import ProgressStepper from '../../../components/shared/ProgressStepper';
 import situationsData from '../../../data/situations';
 import type { DocumentFormData } from '../../../types';
@@ -33,7 +33,11 @@ const docTitles: Record<string, { en: string; hi: string }> = {
   'labor-rights':         { en: 'Wage / Labour Rights Complaint',             hi: 'वेतन / श्रम अधिकार शिकायत' },
 };
 
-const EMPTY: DocumentFormData = { name: '', address: '', phone: '', date: '', incidentDate: '', description: '', amount: '', respondentName: '', respondentAddress: '', authority: '', infoRequested: '' };
+const EMPTY: DocumentFormData = { 
+  name: '', address: '', phone: '', date: '', incidentDate: '', description: '', 
+  amount: '', respondentName: '', respondentAddress: '', authority: '', infoRequested: '',
+  incidentTime: '', incidentLocation: '', accusedNames: '', witnessNames: '', evidenceList: '', complainantId: ''
+};
 
 export default function GeneratePage() {
   const { slug } = useParams<{ slug: string }>();
@@ -59,6 +63,10 @@ export default function GeneratePage() {
 
   const docText = templateType === 'rti'
     ? makeRTIText(fields)
+    : templateType === 'fir'
+    ? makeFIRText(fields)
+    : templateType === 'consumer'
+    ? makeConsumerText(fields)
     : makeComplaintText(fields, docTitle, lawCite);
 
   const handleChange = (key: keyof DocumentFormData, val: string) =>
@@ -68,18 +76,9 @@ export default function GeneratePage() {
     if (templateType === 'rti') {
       generateRTIPDF(fields);
     } else if (templateType === 'fir') {
-      generateFIRDraftPDF({
-        policeStationName: fields.respondentName || 'Local Police Station',
-        policeStationAddress: fields.respondentAddress || '',
-        complainantName: fields.name,
-        complainantAddress: fields.address,
-        complainantPhone: fields.phone,
-        incidentDate: fields.incidentDate,
-        incidentTime: '',
-        incidentLocation: '',
-        incidentDescription: fields.description,
-        date: fields.date,
-      });
+      generateFIRDraftPDF(fields);
+    } else if (templateType === 'consumer') {
+      generateConsumerComplaintPDF(fields);
     } else {
       generateComplaintPDF(fields, docTitle, lawCite);
     }

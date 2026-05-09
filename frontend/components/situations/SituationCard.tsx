@@ -77,9 +77,11 @@ export default function SituationCard({ situation }: { situation: Situation }) {
         {/* Footer row */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <span style={{ fontSize: 12, color: '#A0A0A0', fontFamily: hFont }}>
-            {isHi ? `${situation.checklist.length} दस्तावेज़ आवश्यक` : `${situation.checklist.length} documents needed`}
+            {isHi 
+              ? `${situation?.checklist?.length || 0} दस्तावेज़ आवश्यक` 
+              : `${situation?.checklist?.length || 0} documents needed`}
           </span>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: colors.text, fontSize: 13, fontWeight: 700, fontFamily: hFont }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: colors?.text || '#923c22', fontSize: 13, fontWeight: 700, fontFamily: hFont }}>
             {isHi ? 'अधिकार देखें' : 'View Rights'} <ChevronRight size={14} />
           </div>
         </div>

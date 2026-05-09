@@ -14,7 +14,7 @@ export default function DocumentChecklist({ situation, onCompleteChange }: { sit
   const [checked, setChecked] = useState<Record<string, boolean>>({});
 
   const checkCompletion = (items: Record<string, boolean>) => {
-    const required = situation.checklist.filter(i => i.required);
+    const required = (situation.checklist || []).filter(i => i.required);
     if (required.length === 0) return true;
     return required.every(i => items[i.id]);
   };
@@ -37,8 +37,8 @@ export default function DocumentChecklist({ situation, onCompleteChange }: { sit
     onCompleteChange?.(checkCompletion(next));
   };
 
-  const done = situation.checklist.filter(i => checked[i.id]).length;
-  const total = situation.checklist.length;
+  const done = (situation.checklist || []).filter(i => checked[i.id]).length;
+  const total = situation.checklist?.length || 0;
   const pct = total > 0 ? Math.round((done / total) * 100) : 0;
 
   return (
@@ -49,7 +49,7 @@ export default function DocumentChecklist({ situation, onCompleteChange }: { sit
           {t('explain.checklist_title')}
         </h2>
         <button
-          onClick={() => generateChecklistPDF(situation.checklist.map(i => ({ ...i, checked: !!checked[i.id] })), situation.title.en)}
+          onClick={() => generateChecklistPDF((situation.checklist || []).map(i => ({ ...i, checked: !!checked[i.id] })), situation.title.en)}
           style={{
             display: 'inline-flex', alignItems: 'center', gap: 6,
             background: 'white', color: '#923c22', border: '1.5px solid #EAE1DA',
@@ -87,7 +87,7 @@ export default function DocumentChecklist({ situation, onCompleteChange }: { sit
 
       {/* Checklist items */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-        {situation.checklist.map(item => (
+        {(situation.checklist || []).map(item => (
           <div
             key={item.id}
             onClick={() => toggle(item.id)}

@@ -1,4 +1,4 @@
-# NyayaMitra: AI-Enhanced Legal Aid Platform for First-Generation Litigants
+# NyayaMitra — AI-Enhanced Legal Aid Platform for First-Generation Litigants
 
 **Live Working Demo Link:** https://project-legal-o8gx.vercel.app/
 
@@ -7,10 +7,10 @@
 Video Link - https://drive.google.com/file/d/16jZc6bzrzVmW7RAoTZ9VGD_YB8O0mVpA/view?usp=sharing
 ---
 
-## 👥 Project Title & Team Details
-**Project Title:** AI-Enhanced Legal Aid Platform for First-Generation Litigants  
-**Team Name:** Team Fusion Optimizer
+## 👥 Team Details
 
+**Project Title:** NyayaMitra — AI-Enhanced Legal Aid Platform for First-Generation Litigants  
+**Team Name:** Team Fusion Optimizer
 **Team Members:**
 - Swayam Garg
 - Yuvraj Pandiya
@@ -19,153 +19,304 @@ Video Link - https://drive.google.com/file/d/16jZc6bzrzVmW7RAoTZ9VGD_YB8O0mVpA/v
 
 ---
 
-## 🎯 Problem Statement Overview
-**Selected Problem (WD-04):** Build a legal aid web platform.
+## 🎯 Problem Statement (WD-04)
 
-**Core Solution Approach:**  
-India has over 45 million pending court cases, leaving first-generation litigants overwhelmed by legal jargon and complex procedures. Our platform, **NyayaMitra**, solves this by providing a categorised **Legal Situation Selector** (e.g., Landlord Dispute, Consumer Complaint, FIR Filing). 
+India has over **45 million pending court cases**, leaving first-generation litigants overwhelmed by legal jargon and complex procedures. **NyayaMitra** bridges this gap by providing a guided, bilingual (Hindi + English) legal aid experience.
 
-When a user selects a life event, the platform:
-1. **Explains Legal Rights** in plain language (Hindi & English) dynamically using AI, alongside the actual legal text.
+When a user selects a life situation (e.g. Landlord Dispute, Consumer Complaint, FIR Filing), the platform:
+
+1. **Explains Legal Rights** in plain language using Google Gemini AI, alongside the actual law text.
 2. Generates an interactive **Document Checklist** and **Step-by-Step Procedure**.
-3. Features a map-based **Legal Aid Directory** connecting users with nearby pro bono lawyers and NALSA clinics.
-4. Includes a **Document Template Generator** that automatically produces filled-in legal notices, complaints, or RTI applications ready for download.
+3. Shows a **Map-Based Legal Aid Directory** of nearby pro bono lawyers and NALSA clinics.
+4. Produces a **Filled-In Legal Document** (RTI, FIR Draft, Consumer Complaint) as a downloadable PDF.
 
 ---
 
-## 🏗 Technical Documentation (+3 Bonus Points Criteria)
+## 🏗 Architecture
 
-### 1. Architecture Diagram
+### System Diagram
+
 ```mermaid
 graph TD
-    Client[Client Browser / Mobile UI]
-    NextJS[Next.js 14 Frontend - React]
-    Express[Node.js + Express Backend]
-    MongoDB[(MongoDB Atlas)]
+    Client[Browser / Mobile UI]
+    NextJS["Next.js 16 Frontend (React 19 + TypeScript)"]
+    SpringBoot["Java Spring Boot 3 Backend (Port 5000)"]
+    H2[("H2 In-Memory DB (dev) / PostgreSQL (prod)")]
     Gemini[Google Gemini 1.5 Flash API]
     Maps[Google Maps API]
+    jsPDF[jsPDF — Client-Side PDF Generation]
 
-    Client <-->|Bilingual UI & Client-Side PDF Gen| NextJS
-    NextJS <-->|REST API Calls| Express
-    Express <-->|Read / Write| MongoDB
-    Express <-->|Legal Translating & Chat| Gemini
-    NextJS <-->|Geolocation| Maps
+    Client <-->|Bilingual UI| NextJS
+    NextJS <-->|REST API / JWT Auth| SpringBoot
+    SpringBoot <-->|JPA / Hibernate| H2
+    SpringBoot <-->|AI Prompts| Gemini
+    NextJS <-->|Geolocation + Maps| Maps
+    NextJS -->|Document Generation| jsPDF
 ```
 
 ### 2. System Workflow / User Flow
-*Eraser Prompt for diagram generation:*<img width="1164" height="605" alt="Screenshot 2026-04-01 144958" src="https://github.com/user-attachments/assets/a9992d19-d705-4424-833a-e5ec705a1bca" />
 
-### 3. Setup and Installation Instructions
+*Eraser Prompt for diagram generation:*<br/>
+<img width="1164" height="605" alt="Screenshot 2026-04-01 144958" src="https://github.com/user-attachments/assets/a9992d19-d705-4424-833a-e5ec705a1bca" />
 
-**Prerequisites:** Node.js (v18+) and npm.
+### Request Flow
 
-**Step 1: Clone the repository**
+```text
+User → Situation Selector → Rights Explainer (Gemini AI)
+     → Step-by-Step Procedure → Document Checklist
+     → [Generate PDF Document] OR [Find Pro Bono Lawyer on Map]
+```
+
+---
+
+## 📁 Folder Structure
+
+```text
+hackathon3/
+├── backend-java/                      # ✅ ACTIVE BACKEND — Spring Boot 3 / Java 21
+│   ├── src/main/java/com/nyayamitra/
+│   │   ├── controller/                # REST Controllers (AI, Auth, Lawyers, Situations)
+│   │   ├── service/                   # Business logic (AiService, AuthService, ...)
+│   │   ├── entity/                    # JPA Entities (Situation, Lawyer, AppUser, ...)
+│   │   ├── repository/                # Spring Data JPA Repositories
+│   │   ├── dto/                       # Request / Response DTOs
+│   │   ├── security/                  # JWT filter, JwtUtils, SecurityConfig
+│   │   ├── config/                    # CORS, Swagger / OpenAPI config
+│   │   └── exception/                 # Global exception handler
+│   ├── src/main/resources/
+│   │   ├── application.yml            # Server config (port, DB, JWT, Gemini)
+│   │   └── data/                      # Seed JSON data (situations, lawyers)
+│   └── pom.xml                        # Maven build — Spring Boot 3.2.5, Java 21
+│
+└── frontend/                          # Next.js 16 (React 19) App
+    ├── app/                           # App Router pages
+    │   ├── page.tsx                   # Home / Landing
+    │   ├── situations/                # Situation list + detail pages
+    │   ├── generate/[slug]/           # Document generation wizard
+    │   ├── lawyers/                   # Pro bono lawyer map
+    │   └── about/                     # About page
+    ├── components/                    # Reusable UI components
+    ├── data/                          # Static situation JSON (client-side fallback)
+    ├── lib/
+    │   └── pdfGenerator.ts            # jsPDF — RTI, FIR, Consumer Complaint, Checklist
+    ├── types/index.ts                 # Shared TypeScript interfaces (DocumentFormData, ...)
+    └── locales/                       # i18next dictionaries (en, hi)
+```
+
+---
+
+## ⚙️ Setup & Installation
+
+### Prerequisites
+
+| Requirement | Version |
+|---|---|
+| **Java (JDK)** | 21+ |
+| **Maven** | Bundled via `mvnw` wrapper |
+| **Node.js** | 18+ |
+| **npm** | 9+ |
+
+---
+
+### Step 1 — Clone the Repository
+
 ```bash
 git clone https://github.com/Swayam7Garg/Project_Legal.git
 cd Project_Legal
 ```
 
-**Step 2: Backend Setup**
+---
+
+### Step 2 — Backend Setup (Java Spring Boot)
+
 ```bash
-cd backend
-npm install
-npm run dev
-# Server runs on http://localhost:5000
+cd backend-java
+
+# Windows
+mvnw.cmd spring-boot:run
+
+# macOS / Linux
+./mvnw spring-boot:run
 ```
 
-**Step 3: Frontend Setup**
+> The backend starts on **http://localhost:5000**  
+> H2 Console (dev): **http://localhost:5000/h2-console**  
+> Swagger UI: **http://localhost:5000/swagger-ui.html**  
+> API Docs: **http://localhost:5000/api-docs**
+
+**Optional — configure environment variables** (see section below) before running if you need Gemini AI features or PostgreSQL.
+
+---
+
+### Step 3 — Frontend Setup
+
 ```bash
 cd ../frontend
 npm install
 npm run dev
-# App runs on http://localhost:3000
 ```
 
-### 4. Folder Structure Explanation
-```text
-Project_Legal/
-├── backend/                  # Node.js + Express API
-│   ├── src/
-│   │   ├── models/           # Mongoose schemas (Situations, Lawyers)
-│   │   ├── routes/           # Endpoints for AI, Lawyers, Situations
-│   │   └── services/         # LLM LangChain integration
-├── frontend/                 # Next.js 14 React Application
-│   ├── app/                  # App Router (Pages: /situations, /lawyers, /translate)
-│   ├── components/           # Reusable UI (Earthen Theme, Maps, Chatbots)
-│   ├── data/                 # JSON static structures & Dummy Data
-│   ├── lib/                  # jsPDF Logic for Document Generation
-│   └── locales/              # i18next dictionaries (English & Hindi)
+> Frontend runs on **http://localhost:3000**
+
+---
+
+## 🔑 Environment Variables
+
+### `backend-java/src/main/resources/application.yml` (or as OS env vars)
+
+| Variable | Default (dev) | Description |
+|---|---|---|
+| `DB_URL` | `jdbc:h2:mem:nyayamitra` | JDBC URL — use PostgreSQL URL in prod |
+| `DB_USERNAME` | `sa` | Database username |
+| `DB_PASSWORD` | *(empty)* | Database password |
+| `DB_DRIVER` | `org.h2.Driver` | Use `org.postgresql.Driver` for prod |
+| `JWT_SECRET` | *(dev key bundled)* | **Change before production** |
+| `GEMINI_API_KEY` | *(bundled dev key)* | Google Gemini API key |
+| `FRONTEND_URL` | `http://localhost:3000` | Allowed CORS origin |
+
+**For PostgreSQL in production**, override:
+```bash
+export DB_URL=jdbc:postgresql://host:5432/nyayamitra
+export DB_USERNAME=postgres
+export DB_PASSWORD=yourpassword
+export DB_DRIVER=org.postgresql.Driver
+export JWT_SECRET=your_very_long_random_secret
+export GEMINI_API_KEY=your_gemini_key
 ```
 
-### 5. Environment Variables
-Provide the following variables in their respective directories.
+### `frontend/.env.local`
 
-**`backend/.env`**
-```env
-PORT=5000
-NODE_ENV=development
-MONGODB_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/test
-GEMINI_API_KEY=your_gemini_api_key_here
-FRONTEND_URL=http://localhost:3000
-```
-
-**`frontend/.env.local`**
 ```env
 NEXT_PUBLIC_BACKEND_URL=http://localhost:5000
 NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_google_maps_key_here
 ```
 
-### 6. Sample Test Inputs
-To verify the application's logic, judges can use the following test data:
-- **Simplify Legal Document Input (Translate Feature):**
-  > *"Whoever, being in any manner entrusted with property, or with any dominion over property, dishonestly misappropriates or converts to his own use that property, commits criminal breach of trust." (IPC Section 405)*
-- **Chatbot / Legal Query:**
-  > *"My landlord is refusing to return my security deposit of ₹20,000 even though I gave proper notice. Check my rights."*
-- **Map Location Testing:** Filter by "Indore" to see the custom integrated hardcoded legal aid clinics and synthetic lawyer data.
+---
+
+## 🌐 API Endpoints
+
+All endpoints are documented interactively at **http://localhost:5000/swagger-ui.html**.
+
+| Method | Path | Description | Auth |
+|---|---|---|---|
+| `GET` | `/api/situations` | List all legal situations (summary) | Public |
+| `GET` | `/api/situations/{id}` | Full situation detail by slug | Public |
+| `GET` | `/api/lawyers` | Search pro-bono lawyers (`?city=&state=&specialization=`) | Public |
+| `GET` | `/api/lawyers/city/{city}` | All lawyers in a city | Public |
+| `POST` | `/api/ai/explain-rights` | Gemini AI — explain rights for a situation | Public |
+| `POST` | `/api/ai/analyze-case` | Gemini AI — analyze user's legal position | Public |
+| `POST` | `/api/ai/chat` | Gemini AI — multi-turn legal chatbot | Public |
+| `POST` | `/api/ai/translate-document` | Gemini AI — simplify legal document text | Public |
+| `POST` | `/api/auth/register` | Register a new user (returns JWT) | Public |
+| `POST` | `/api/auth/login` | Login (returns JWT) | Public |
+| `GET` | `/api/health` | Health check | Public |
 
 ---
 
-## 🗄 Domain-Specific Requirements
+## 🗄 Database Schema
 
-### Database Schema (ERD)
 ```mermaid
 erDiagram
     SITUATION {
         string slug PK
         string category
-        object title "en, hi"
-        object description "en, hi"
-        array rights
-        array laws
-        array checklist
-        array steps
+        string title_en
+        string title_hi
+        string description_en
+        string description_hi
+        string template_type
     }
     LAWYER {
         string id PK
         string name
-        array specializations
         string city
+        string state
         string phone
-        boolean proBono
-        object coordinates "lat, lng"
+        boolean pro_bono
+        double lat
+        double lng
     }
-    
-    SITUATION ||--o{ LAWYER : "Matched by Specialization"
-```
+    APP_USER {
+        long id PK
+        string username UK
+        string email UK
+        string password
+        set roles
+        boolean enabled
+    }
+    CHECKLIST_ITEM {
+        long id PK
+        string item_en
+        string item_hi
+        boolean required
+    }
 
-### Role-Based Access Logic
-Because NyayaMitra is fundamentally designed as a **public-good Legal Aid platform**, all core resources (rights explanations, chatbots, maps, document generation) are exposed via **Public User Access** to ensure maximum reach for marginalized communities without the friction of authentication. 
-*Note: In future production iterations, an `Admin` role will be introduced specifically to continuously update verified legal laws, schemes, and the Pro Bono Lawyer Directory.*
+    SITUATION ||--o{ CHECKLIST_ITEM : "has"
+    SITUATION ||--o{ LAWYER : "matched by specialization"
+```
 
 ---
 
-## ⚖️ Technical Ethics & Transparency
+## 🔐 Security & Auth
 
-### AI Usage Declaration
-- **Google Gemini 1.5 Flash:** Used extensively via LangChain in the backend for the "Simplify Document" feature, interactive legal chatbot, and context-aware plain-English/Hindi rights explanations.
-- **GitHub Copilot / Cursor AI:** Used as pair-programming assistants during the hackathon to accelerate React component boilerplate generation, CSS styling, and debugging frontend build errors.
-- *Strict Prompt Constraints:* Our AI integration utilizes aggressive system instructions to ensure the LLM **does not hallucinate laws**, strictly formats output at an 8th-grade reading level, and explicitly declares: *"This is legal information, not legal advice."*
+- **Spring Security + JWT** (JJWT 0.12.5) protects admin-level routes.
+- All core public-good features (situations, lawyers, AI, PDF generation) are **publicly accessible** — no login required — to maximize reach for marginalized communities.
+- The `ROLE_ADMIN` role is reserved for future content administration (updating lawyers, situations).
+- JWT tokens expire after **24 hours** (configurable via `jwt.expiration-ms`).
 
-### Data Sources & Synthetic Data
-- **Real Legal Sources:** Situation laws, rights, and NALSA structures are referenced from **IndiaCode (indiacode.nic.in)** and **NALSA (nalsa.gov.in)**.
-- **Synthetic Data Declaration:** We explicitly used **synthetic (dummy) data** for populating the Lawyer Directory (specifically the Indore, MP entries and placeholder names/numbers like "Advocate Rajesh Sharma") for testing the map plotting and filtering logic safely. Delhi legal aid coordinates map to real public addresses for demonstration purposes.
+---
+
+## 📝 Sample Test Inputs
+
+### AI Document Simplification (`POST /api/ai/translate-document`)
+```json
+{
+  "documentText": "Whoever, being in any manner entrusted with property, dishonestly misappropriates or converts to his own use that property, commits criminal breach of trust. (IPC Section 405)",
+  "lang": "en"
+}
+```
+
+### Legal Chatbot (`POST /api/ai/chat`)
+```json
+{
+  "situationId": "landlord-dispute",
+  "messages": [
+    { "role": "user", "content": "My landlord is refusing to return my security deposit of ₹20,000. What are my rights?" }
+  ],
+  "lang": "hi"
+}
+```
+
+### Lawyer Search
+```
+GET http://localhost:5000/api/lawyers?city=Indore&specialization=Consumer%20Rights
+```
+
+---
+
+## 🤖 AI & Ethics Declaration
+
+### AI Usage
+- **Google Gemini 1.5 Flash** — Used via direct REST calls (`RestTemplate`) for:
+  - Legal rights explanation in plain Hindi/English
+  - Multi-turn legal chatbot
+  - Legal document simplification
+- **GitHub Copilot / AI Assistants** — Used for boilerplate generation, debugging, and refactoring during development.
+- **Strict Prompt Constraints:** System instructions ensure the LLM never halluccinates laws, targets an 8th-grade reading level, and always declares: *"This is legal information, not legal advice."*
+
+### Data Sources
+- **Real Legal Sources:** Laws, rights, and NALSA structures are referenced from [IndiaCode](https://indiacode.nic.in) and [NALSA](https://nalsa.gov.in).
+- **Synthetic Data:** Lawyer directory entries (specifically Indore, MP names/numbers) use synthetic data for safe demo testing. Delhi entries map to real public NALSA addresses.
+
+---
+
+## 🏆 Domain-Specific Highlights (WD-04 Criteria)
+
+| Criterion | Implementation |
+|---|---|
+| **Bilingual Support** | Full Hindi + English UI via `react-i18next`; all AI responses also bilingual |
+| **Legal Document Generation** | Client-side jsPDF — RTI, FIR Draft, Consumer Complaint, Labour Rights |
+| **Role-Based Access** | Public for all core features; JWT-protected for future admin role |
+| **Map Integration** | `@react-google-maps/api` with lawyer markers and proximity filters |
+| **Database** | H2 (dev) / PostgreSQL (prod) via Spring Data JPA |
+| **Swagger / OpenAPI** | Full API documentation at `/swagger-ui.html` |
