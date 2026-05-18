@@ -37,7 +37,7 @@ jwt:
 
 # ─── Gemini AI ───────────────────────────────────────────────────────────────
 gemini:
-  api-key: ${GEMINI_API_KEY:AIzaSyCzhOo94qtyTNlmOVCOhoukkv6M4WhzBFc}
+  api-key: ${GEMINI_API_KEY:}
   model: gemini-1.5-flash
   base-url: https://generativelanguage.googleapis.com/v1beta/models
 
