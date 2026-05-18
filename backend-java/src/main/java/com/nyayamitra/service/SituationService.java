@@ -49,6 +49,14 @@ public class SituationService {
 
     /** Used internally by AI service to fetch situation context */
     public Situation getEntityById(String situationId) {
-        return situationRepository.findBySituationId(situationId).orElse(null);
+        Situation situation = situationRepository.findBySituationId(situationId).orElse(null);
+        if (situation != null) {
+            // Initialize lazy collections to avoid LazyInitializationException in AiService
+            if (situation.getLaws() != null) situation.getLaws().size();
+            if (situation.getRights() != null) situation.getRights().size();
+            if (situation.getChecklist() != null) situation.getChecklist().size();
+            if (situation.getSteps() != null) situation.getSteps().size();
+        }
+        return situation;
     }
 }
