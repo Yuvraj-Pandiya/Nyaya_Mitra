@@ -3,7 +3,7 @@ uvicorn
 python-multipart
 langchain
 langchain-google-genai
-chromadb-client
+chromadb
 pypdf
 pdfplumber
 pytesseract
