@@ -19,13 +19,21 @@ export default function AIChatbox({ situation }: { situation: Situation }) {
     setLoading(true);
     setResponse(null);
     try {
-      const res = await fetch('/api/analyze', {
+      const res = await fetch('http://localhost:8000/search', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: situation.id, userStory: story, lang })
+        body: JSON.stringify({ query: story, language: lang, top_k: 5 })
       });
       const data = await res.json();
-      setResponse(data);
+      
+      if (!res.ok || data.error) {
+        setResponse({ error: data.error || data.detail || 'Failed to connect to AI.' });
+      } else {
+        setResponse({
+          analysis: data.answer,
+          sources: data.sources
+        });
+      }
     } catch (e) {
       setResponse({ error: 'Failed to connect to AI.' });
     }

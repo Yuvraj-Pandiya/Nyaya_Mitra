@@ -39,15 +39,20 @@ When a user selects a life situation (e.g. Landlord Dispute, Consumer Complaint,
 ```mermaid
 graph TD
     Client[Browser / Mobile UI]
-    NextJS["Next.js 16 Frontend (React 19 + TypeScript)"]
+    NextJS["Next.js Frontend (React + TypeScript)"]
     SpringBoot["Java Spring Boot 3 Backend (Port 5000)"]
     H2[("H2 In-Memory DB (dev) / PostgreSQL (prod)")]
-    Gemini[Google Gemini 1.5 Flash API]
+    PythonRAG["FastAPI Python Backend (Port 8000)"]
+    ChromaDB[("ChromaDB Vector Store (Local Persistent)")]
+    Gemini[Google Gemini API]
     Maps[Google Maps API]
     jsPDF[jsPDF — Client-Side PDF Generation]
 
     Client <-->|Bilingual UI| NextJS
     NextJS <-->|REST API / JWT Auth| SpringBoot
+    NextJS <-->|RAG Search / Ingest| PythonRAG
+    PythonRAG <-->|Vector Storage| ChromaDB
+    PythonRAG <-->|Gemini Embeddings & Generation| Gemini
     SpringBoot <-->|JPA / Hibernate| H2
     SpringBoot <-->|AI Prompts| Gemini
     NextJS <-->|Geolocation + Maps| Maps
@@ -65,6 +70,9 @@ graph TD
 User → Situation Selector → Rights Explainer (Gemini AI)
      → Step-by-Step Procedure → Document Checklist
      → [Generate PDF Document] OR [Find Pro Bono Lawyer on Map]
+     
+User/Lawyer → Knowledge Base PDF Ingest → OCR/Extract → Chunk → Embed (Gemini) → ChromaDB
+User → Chatbot Query → RAG Search → Retrieve Chroma Context → Generate Answer (Gemini)
 ```
 
 ---
@@ -88,12 +96,21 @@ hackathon3/
 │   │   └── data/                      # Seed JSON data (situations, lawyers)
 │   └── pom.xml                        # Maven build — Spring Boot 3.2.5, Java 21
 │
-└── frontend/                          # Next.js 16 (React 19) App
+├── backend-python-rag/                # ✅ RAG PIPELINE BACKEND — FastAPI / Python 3
+│   ├── core/                          # ChromaDB Vector Store client setup
+│   ├── routers/                       # Ingest & Search API routes
+│   ├── services/                      # OCR extraction, Chunking, Embeddings, Generation
+│   ├── main.py                        # FastAPI Server Entrypoint
+│   ├── requirements.txt               # Python package dependencies
+│   └── .env                           # Environment configuration (Gemini API keys, Host/Port)
+│
+└── frontend/                          # Next.js App
     ├── app/                           # App Router pages
     │   ├── page.tsx                   # Home / Landing
     │   ├── situations/                # Situation list + detail pages
     │   ├── generate/[slug]/           # Document generation wizard
     │   ├── lawyers/                   # Pro bono lawyer map
+    │   ├── knowledge-base/            # RAG Knowledge Base PDF uploader
     │   └── about/                     # About page
     ├── components/                    # Reusable UI components
     ├── data/                          # Static situation JSON (client-side fallback)
@@ -144,11 +161,24 @@ mvnw.cmd spring-boot:run
 > Swagger UI: **http://localhost:5000/swagger-ui.html**  
 > API Docs: **http://localhost:5000/api-docs**
 
-**Optional — configure environment variables** (see section below) before running if you need Gemini AI features or PostgreSQL.
+### Step 3 — Python RAG Backend Setup
+
+```bash
+cd backend-python-rag
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Start the server
+python main.py
+```
+
+> The Python RAG backend starts on **http://localhost:8000**
+> Uses local persistent ChromaDB inside `data/chromadb/` — no Docker daemon required!
 
 ---
 
-### Step 3 — Frontend Setup
+### Step 4 — Frontend Setup
 
 ```bash
 cd ../frontend
@@ -162,27 +192,25 @@ npm run dev
 
 ## 🔑 Environment Variables
 
-### `backend-java/src/main/resources/application.yml` (or as OS env vars)
+### `backend-java/.env` (or as OS env vars)
 
 | Variable | Default (dev) | Description |
 |---|---|---|
-| `DB_URL` | `jdbc:h2:mem:nyayamitra` | JDBC URL — use PostgreSQL URL in prod |
+| `DB_URL` | `jdbc:h2:mem:nyayamitra` | JDBC URL — falls back to H2 if postgres is commented out |
 | `DB_USERNAME` | `sa` | Database username |
 | `DB_PASSWORD` | *(empty)* | Database password |
-| `DB_DRIVER` | `org.h2.Driver` | Use `org.postgresql.Driver` for prod |
-| `JWT_SECRET` | *(dev key bundled)* | **Change before production** |
-| `GEMINI_API_KEY` | *(bundled dev key)* | Google Gemini API key |
-| `FRONTEND_URL` | `http://localhost:3000` | Allowed CORS origin |
+| `DB_DRIVER` | `org.h2.Driver` | Database driver |
+| `JWT_SECRET` | *(dev key)* | JWT secret key |
+| `GEMINI_API_KEY` | *(dev key)* | Google Gemini API key |
 
-**For PostgreSQL in production**, override:
-```bash
-export DB_URL=jdbc:postgresql://host:5432/nyayamitra
-export DB_USERNAME=postgres
-export DB_PASSWORD=yourpassword
-export DB_DRIVER=org.postgresql.Driver
-export JWT_SECRET=your_very_long_random_secret
-export GEMINI_API_KEY=your_gemini_key
-```
+### `backend-python-rag/.env`
+
+| Variable | Default (dev) | Description |
+|---|---|---|
+| `GOOGLE_API_KEY` | *(dev key)* | Google Gemini API key (for LangChain & Embeddings) |
+| `GEMINI_API_KEY` | *(dev key)* | Google Gemini API key |
+| `HOST` | `0.0.0.0` | Server host address |
+| `PORT` | `8000` | Server port |
 
 ### `frontend/.env.local`
 
@@ -195,6 +223,7 @@ NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_google_maps_key_here
 
 ## 🌐 API Endpoints
 
+### 1. Java Backend (Port 5000)
 All endpoints are documented interactively at **http://localhost:5000/swagger-ui.html**.
 
 | Method | Path | Description | Auth |
@@ -210,6 +239,14 @@ All endpoints are documented interactively at **http://localhost:5000/swagger-ui
 | `POST` | `/api/auth/register` | Register a new user (returns JWT) | Public |
 | `POST` | `/api/auth/login` | Login (returns JWT) | Public |
 | `GET` | `/api/health` | Health check | Public |
+
+### 2. Python RAG Backend (Port 8000)
+
+| Method | Path | Description | Auth |
+|---|---|---|---|
+| `POST` | `/ingest` | Upload a PDF, extract, chunk, embed, and store in ChromaDB | Public |
+| `GET` | `/ingest/stats` | Get the total number of document chunks currently indexed | Public |
+| `POST` | `/search` | Retrieve context from ChromaDB, merge history, and generate answer | Public |
 
 ---
 

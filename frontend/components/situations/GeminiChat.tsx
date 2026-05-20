@@ -124,13 +124,15 @@ export default function GeminiChat({ situation }: GeminiChatProps) {
     setLoading(true);
 
     try {
-      const res = await fetch('/api/chat', {
+      // Build a conversation string for context
+      const conversationContext = updatedMessages.map(m => `${m.role}: ${m.content}`).join('\n');
+      
+      const res = await fetch('http://localhost:8000/search', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          situationId: situation.id,
-          messages: updatedMessages.map(m => ({ role: m.role, content: m.content })),
-          lang,
+          query: conversationContext,
+          language: lang,
         }),
       });
 
@@ -139,16 +141,22 @@ export default function GeminiChat({ situation }: GeminiChatProps) {
       if (!res.ok || data.error) {
         setMessages(prev => [...prev, {
           role: 'assistant',
-          content: data.error || (isHi
+          content: data.error || data.detail || (isHi
             ? 'माफ़ कीजिए, अभी AI सेवा उपलब्ध नहीं है। कृपया पुनः प्रयास करें।'
             : 'Sorry, the AI service is unavailable right now. Please try again in a moment.'),
           timestamp: new Date(),
           isError: true,
         }]);
       } else {
+        let reply = data.answer || (isHi ? 'कोई प्रतिक्रिया नहीं मिली।' : 'No response received.');
+        if (data.sources && data.sources.length > 0) {
+          const sourcesText = data.sources.map((s: string) => `\n- ${s}`).join('');
+          reply += (isHi ? `\n\n**स्रोत:**${sourcesText}` : `\n\n**Sources:**${sourcesText}`);
+        }
+        
         setMessages(prev => [...prev, {
           role: 'assistant',
-          content: data.reply || (isHi ? 'कोई प्रतिक्रिया नहीं मिली।' : 'No response received.'),
+          content: reply,
           timestamp: new Date(),
         }]);
       }
@@ -157,7 +165,7 @@ export default function GeminiChat({ situation }: GeminiChatProps) {
         role: 'assistant',
         content: isHi
           ? 'नेटवर्क त्रुटि। कृपया सुनिश्चित करें कि बैकएंड सर्वर चल रहा है।'
-          : 'Network error. Please ensure the backend server is running at localhost:5000.',
+          : 'Network error. Please ensure the backend server is running at localhost:8000.',
         timestamp: new Date(),
         isError: true,
       }]);

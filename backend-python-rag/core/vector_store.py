@@ -20,11 +20,11 @@ COLLECTION_NAME = "legal_documents"
 def _get_client():
     global _client
     if _client is None:
-        host = os.getenv("CHROMA_HOST", "localhost")
-        port = int(os.getenv("CHROMA_PORT", "8001"))
-        _client = chromadb.HttpClient(host=host, port=port)
-        # Quick connectivity check
-        _client.heartbeat()
+        # Use persistent local client instead of HTTP client to avoid dependency on Docker
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        db_path = os.path.join(base_dir, "data", "chromadb")
+        os.makedirs(db_path, exist_ok=True)
+        _client = chromadb.PersistentClient(path=db_path)
     return _client
 
 
@@ -46,10 +46,8 @@ def get_collection():
 def collection_stats() -> dict:
     """Return basic stats about the collection (count of stored chunks)."""
     col = get_collection()
-    host = os.getenv("CHROMA_HOST", "localhost")
-    port = os.getenv("CHROMA_PORT", "8001")
     return {
         "collection": COLLECTION_NAME,
         "total_chunks": col.count(),
-        "chroma_server": f"http://{host}:{port}",
+        "chroma_server": "local_persistent",
     }
