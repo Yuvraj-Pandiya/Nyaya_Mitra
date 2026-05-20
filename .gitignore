@@ -50,3 +50,11 @@ env/
 .idea/
 COMPLETION_REPORT.md
 todo.md
+
+# Java / Spring Boot
+target/
+backend-java/target/
+*.class
+*.jar
+*.war
+.mvn/wrapper/maven-wrapper.jar

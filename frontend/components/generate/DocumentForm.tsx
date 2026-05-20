@@ -60,8 +60,22 @@ export default function DocumentForm({ fields, step, templateType, onChange }: P
         </>) : isFIR ? (<>
           {inp('respondentName',    isHi ? 'पुलिस स्टेशन का नाम' : 'Police Station Name', 'text', false, 'e.g. Sadar Police Station')}
           {inp('respondentAddress', isHi ? 'पुलिस स्टेशन का पता' : 'Police Station Address', 'text', true)}
-          {inp('incidentDate',      isHi ? 'घटना की तारीख' : t('generate.incident_date'), 'date')}
-          {inp('description',       isHi ? 'घटना का विवरण' : 'Description of Incident', 'text', true, 'Describe what happened in detail — who, what, when, where...')}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            {inp('incidentDate',      isHi ? 'घटना की तारीख' : t('generate.incident_date'), 'date')}
+            {inp('incidentTime',      isHi ? 'घटना का समय' : 'Incident Time', 'text', false, 'e.g. 10:30 PM')}
+          </div>
+          {inp('incidentLocation',  isHi ? 'घटना का स्थान' : 'Incident Location', 'text', false, 'Where did it happen?')}
+          {inp('description',       isHi ? 'घटना का विवरण' : 'Description of Incident', 'text', true, 'Describe what happened in detail...')}
+          {inp('accusedNames',      isHi ? 'आरोपियों के नाम (यदि ज्ञात हो)' : 'Accused Names (if known)', 'text', false, 'Separated by commas')}
+          {inp('witnessNames',      isHi ? 'गवाहों के नाम' : 'Witness Names', 'text', false)}
+          {inp('evidenceList',      isHi ? 'सबूतों की सूची' : 'Evidence / Documents', 'text', true, 'e.g. Photos, Medical reports...')}
+          {inp('complainantId',     isHi ? 'पहचान प्रमाण (वैकल्पिक)' : 'ID Proof (Optional)', 'text', false, 'e.g. Aadhaar No.')}
+        </>) : templateType === 'consumer' ? (<>
+          {inp('respondentName',    isHi ? 'कंपनी/विक्रेता का नाम' : 'Company/Seller Name', 'text', false, 'e.g. Samsung India Pvt Ltd')}
+          {inp('respondentAddress', isHi ? 'कंपनी का पता (जिला)' : 'Company Address / District', 'text', true, 'Full address or just the district for the commission')}
+          {inp('incidentDate',      isHi ? 'खरीद की तारीख' : 'Date of Purchase', 'date')}
+          {inp('description',       isHi ? 'उत्पाद/सेवा में दोष का विवरण' : 'Defect/Deficiency Description', 'text', true, 'What was wrong with the product or service?')}
+          {inp('amount',            isHi ? 'भुगतान की गई राशि' : 'Amount Paid', 'text', false, 'e.g. 25000')}
         </>) : (<>
           {inp('incidentDate',      isHi ? 'घटना की तारीख' : t('generate.incident_date'), 'date')}
           {inp('respondentName',    isHi ? 'शिकायत किसके विरुद्ध (नाम)' : t('generate.respondent_name'), 'text', false, 'Name of person/company')}

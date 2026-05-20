@@ -14,6 +14,7 @@ export default function Navbar() {
     { href: '/situations', label: t('nav.situations') },
     { href: '/lawyers', label: t('nav.lawyers') },
     { href: '/translate', label: i18n.language === 'hi' ? 'दस्तावेज़ सरल बनाएं' : 'Simplify Document' },
+    { href: '/knowledge-base', label: i18n.language === 'hi' ? 'ज्ञान भंडार' : 'Knowledge Base' },
   ];
 
   const isHi = i18n.language === 'hi';

@@ -1,0 +1,25 @@
+version: "3.9"
+
+services:
+
+  # ── ChromaDB Vector Database ────────────────────────────────────────────────
+  chromadb:
+    image: chromadb/chroma:0.5.20
+    container_name: nyayamitra_chromadb
+    ports:
+      - "8001:8000"           # Host 8001 → Container 8000
+    volumes:
+      - chroma_data:/chroma/chroma   # Persist embeddings across restarts
+    environment:
+      - IS_PERSISTENT=TRUE
+      - ANONYMIZED_TELEMETRY=FALSE
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  chroma_data:
+    driver: local
