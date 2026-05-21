@@ -22,7 +22,7 @@ _model = None
 def _get_model():
     global _model
     if _model is None:
-        _model = genai.GenerativeModel("gemini-1.5-flash")
+        _model = genai.GenerativeModel("gemini-3.5-flash")
     return _model
 
 
@@ -44,7 +44,7 @@ Format your response as:
 
 def generate_answer(query: str, context_chunks: list[dict]) -> dict:
     """
-    Generate a grounded RAG answer using Gemini 1.5 Flash.
+    Generate a grounded RAG answer using Gemini 3.5 Flash.
 
     Args:
         query: The user's legal question.
@@ -53,6 +53,13 @@ def generate_answer(query: str, context_chunks: list[dict]) -> dict:
     Returns:
         dict with keys: answer (str), sources (list[str])
     """
+    # ── TEMPORARY DEBUG LOGS ──────────────────────────────────────────────────
+    print(f"\n[DEBUG] [Prompt Generation Stage] Starting chatbot generation flow.")
+    print(f"[DEBUG] [Prompt Generation Stage] User Query: '{query}'")
+    print(f"[DEBUG] [Prompt Generation Stage] Retrieved Chunk Count: {len(context_chunks)}")
+    print(f"[DEBUG] [Prompt Generation Stage] Selected Gemini Model: 'gemini-3.5-flash'")
+    print(f"[DEBUG] [Prompt Generation Stage] -----------------------------------------")
+
     if not context_chunks:
         return {
             "answer": (

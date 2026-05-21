@@ -18,12 +18,24 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      # Local dev (H2): 'update' — Hibernate auto-creates tables.
+      # Production (PostgreSQL + .env): 'validate' — Flyway owns the schema.
+      ddl-auto: ${DDL_AUTO:update}
     show-sql: false
     properties:
       hibernate:
         format_sql: true
     open-in-view: false
+
+  # ─── Flyway ──────────────────────────────────────────────────────────────────
+  flyway:
+    # Disabled by default (H2 local dev). Set FLYWAY_ENABLED=true in .env for PostgreSQL.
+    enabled: ${FLYWAY_ENABLED:false}
+    # Flyway migration scripts live in db/migration/
+    locations: classpath:db/migration
+    # Baseline existing DB if it already has tables (safe for first-time Flyway adoption)
+    baseline-on-migrate: true
+    baseline-version: 0
 
   jackson:
     default-property-inclusion: non_null
