@@ -40,6 +40,8 @@ async def ingest_document(file: UploadFile = File(...)):
     try:
         content = await file.read()
         extracted_text = extract_text_from_pdf(content)
+    except ValueError as ve:
+        raise HTTPException(status_code=400, detail=str(ve))
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Text extraction failed: {e}")
 

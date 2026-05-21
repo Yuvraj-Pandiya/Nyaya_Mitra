@@ -64,9 +64,10 @@ class DebugSearchResponse(BaseModel):
 def _embed_query(text: str) -> list[float]:
     """Generate a RETRIEVAL_QUERY embedding for the user question."""
     result = genai.embed_content(
-        model="models/embedding-001",
+        model="models/gemini-embedding-2",
         content=text,
         task_type="RETRIEVAL_QUERY",
+        output_dimensionality=768,
     )
     return result["embedding"]
 
@@ -76,9 +77,14 @@ def _retrieve(query: str, top_k: int) -> list[dict]:
     Query ChromaDB for the top_k most relevant chunks.
     Returns list of dicts: {text, filename, chunk_index, total_chunks, score}
     """
+    # ── TEMPORARY DEBUG LOGS ──────────────────────────────────────────────────
+    print(f"\n[DEBUG] [Retrieval Stage] Querying ChromaDB.")
+    print(f"[DEBUG] [Retrieval Stage] Query: '{query}', top_k: {top_k}")
+
     collection = get_collection()
 
     if collection.count() == 0:
+        print(f"[DEBUG] [Retrieval Stage] ChromaDB collection is empty! Returning 0 chunks.")
         return []
 
     query_embedding = _embed_query(query)
@@ -107,6 +113,9 @@ def _retrieve(query: str, top_k: int) -> list[dict]:
 
     # Sort by relevance score descending
     chunks.sort(key=lambda x: x["score"], reverse=True)
+    
+    print(f"[DEBUG] [Retrieval Stage] Successfully retrieved {len(chunks)} relevant chunks from ChromaDB.")
+    print(f"[DEBUG] [Retrieval Stage] -----------------------------------------")
     return chunks
 
 

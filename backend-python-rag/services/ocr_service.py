@@ -3,11 +3,26 @@ import pytesseract
 import io
 import re
 
+pytesseract.pytesseract.tesseract_cmd = (
+    r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+)
+
 def extract_text_from_pdf(file_bytes: bytes) -> str:
     """
     Extracts text from a PDF. If the PDF is scanned (no text layer),
     falls back to Tesseract OCR to extract text from the images.
     """
+    if not file_bytes or len(file_bytes) < 10:
+        raise ValueError("The uploaded PDF file is empty or corrupted.")
+
+    # Find the start of the PDF header (handles leading junk bytes)
+    pdf_start = file_bytes.find(b"%PDF-")
+    if pdf_start == -1:
+        raise ValueError("Invalid PDF format: Missing %PDF- header signature.")
+
+    if pdf_start > 0:
+        file_bytes = file_bytes[pdf_start:]
+
     text = ""
     try:
         with pdfplumber.open(io.BytesIO(file_bytes)) as pdf:
