@@ -166,6 +166,10 @@ mvnw.cmd spring-boot:run
 ```bash
 cd backend-python-rag
 
+# create a python virtua environment
+python -m venv <Environment-Name>
+source <Environemnt-Name>/bin/activate
+
 # Install dependencies
 pip install -r requirements.txt
 
