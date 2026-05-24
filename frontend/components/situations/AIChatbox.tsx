@@ -19,7 +19,8 @@ export default function AIChatbox({ situation }: { situation: Situation }) {
     setLoading(true);
     setResponse(null);
     try {
-      const res = await fetch('http://localhost:8000/search', {
+      const pythonBackendUrl = process.env.NEXT_PUBLIC_PYTHON_URL || 'http://localhost:8000';
+      const res = await fetch(`${pythonBackendUrl}/search`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query: story, language: lang, top_k: 5 })

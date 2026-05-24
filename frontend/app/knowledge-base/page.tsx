@@ -23,7 +23,8 @@ export default function KnowledgeBasePage() {
 
   const fetchStats = async () => {
     try {
-      const res = await fetch('http://localhost:8000/ingest/stats');
+      const pythonBackendUrl = process.env.NEXT_PUBLIC_PYTHON_URL || 'http://localhost:8000';
+      const res = await fetch(`${pythonBackendUrl}/ingest/stats`);
       if (res.ok) {
         const data = await res.json();
         setStats(data);
@@ -72,7 +73,8 @@ export default function KnowledgeBasePage() {
     formData.append('file', file);
 
     try {
-      const res = await fetch('http://localhost:8000/ingest', {
+      const pythonBackendUrl = process.env.NEXT_PUBLIC_PYTHON_URL || 'http://localhost:8000';
+      const res = await fetch(`${pythonBackendUrl}/ingest`, {
         method: 'POST',
         body: formData,
       });
