@@ -58,3 +58,8 @@ backend-java/target/
 *.jar
 *.war
 .mvn/wrapper/maven-wrapper.jar
+
+.agents/
+backend-python-rag/venv311/
+skills-lock.json
+
