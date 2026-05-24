@@ -13,10 +13,11 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Allow requests from the Spring Boot backend
+# Allow requests from the frontend
+frontend_url = os.getenv("FRONTEND_URL", "*")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # In production, restrict this to the Spring Boot internal IP
+    allow_origins=[frontend_url] if frontend_url != "*" else ["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
